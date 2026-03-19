@@ -28,12 +28,15 @@
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
+  html { height: 100%; }
+
   body {
     background: var(--bg);
     color: var(--text);
     font-family: 'Syne', sans-serif;
     line-height: 1.7;
     font-size: 15px;
+    min-height: 100%;
   }
 
   /* ── HEADER ── */
@@ -109,7 +112,12 @@
   }
 
   /* ── LAYOUT ── */
-  .layout { display: flex; max-width: 1200px; margin: 0 auto; }
+  .layout {
+    display: flex;
+    max-width: 1200px;
+    margin: 0 auto;
+    align-items: flex-start;  /* critical: prevents flex children from stretching to container height */
+  }
 
   /* ── TOC SIDEBAR ── */
   nav.toc {
@@ -118,11 +126,14 @@
     position: sticky;
     top: 0;
     height: 100vh;
+    max-height: 100vh;
     overflow-y: auto;
     border-right: 1px solid var(--border);
     padding: 32px 20px;
     scrollbar-width: thin;
     scrollbar-color: var(--border) transparent;
+    /* Ensures sidebar doesn't expand the flex row height */
+    align-self: flex-start;
   }
   nav.toc::-webkit-scrollbar { width: 4px; }
   nav.toc::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
@@ -698,7 +709,7 @@
 
 <span class="dockerfile-instruction">CMD</span>        [<span class="str">"node"</span>, <span class="str">"server.js"</span>]          <span class="comment"># default command (exec form)</span>
 <span class="dockerfile-instruction">ENTRYPOINT</span> [<span class="str">"node"</span>, <span class="str">"server.js"</span>]         <span class="comment"># always runs; CMD provides default args</span>
-<span class="dockerfile-instruction">LABEL</span>      maintainer=<span class="str">"you@example.com"</span>  <span class="comment"># metadata labels</span>
+<span class="dockerfile-instruction">LABEL</span>      maintainer=<span class="str">"<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="245d4b5164415c45495448410a474b49">[email&#160;protected]</a>"</span>  <span class="comment"># metadata labels</span>
 
 <span class="dockerfile-instruction">ONBUILD</span>    COPY . .                      <span class="comment"># trigger for child images</span>
 <span class="dockerfile-instruction">STOPSIGNAL</span> SIGTERM                       <span class="comment"># signal used to stop container</span>
@@ -1196,7 +1207,7 @@ README.md
   <div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> deploy to remote host</div>
   <pre><code><span class="comment"># Create SSH context pointing to prod server</span>
 <span class="cmd">docker context</span> create prod \
-  <span class="flag">--docker</span> <span class="str">"host=ssh://deploy@prod.example.com"</span>
+  <span class="flag">--docker</span> <span class="str">"host=ssh://<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="4d29283d2122340d3d3f22296328352c203d2128632e2220">[email&#160;protected]</a>"</span>
 
 <span class="comment"># Run any docker/compose command against prod</span>
 <span class="cmd">docker</span> <span class="flag">--context</span> prod compose up <span class="flag">-d</span>
@@ -1396,13 +1407,4 @@ README.md
     <a class="doc-link" href="https://docs.docker.com/reference/cli/docker/" target="_blank">Full CLI Reference</a>
     <a class="doc-link" href="https://docs.docker.com/guides/" target="_blank">Docker Guides</a>
     <a class="doc-link" href="https://hub.docker.com/search?q=&type=image&image_filter=official" target="_blank">Official Images</a>
-    <a class="doc-link" href="https://docs.docker.com/compose/compose-file/" target="_blank">Compose Spec</a>
-    <a class="doc-link" href="https://docs.docker.com/build/building/best-practices/" target="_blank">Best Practices</a>
-  </div>
-</section>
-
-</main>
-</div>
-
-</body>
-</html>
+    <a class="doc-link" href="https://do
