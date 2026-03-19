@@ -4,6 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Docker – The Complete Developer Guide</title>
+<meta name="description" content="A complete professional reference for Docker — containers, images, volumes, networking, Compose, CI/CD, and deployment. Written for fullstack developers.">
+<meta property="og:title" content="Docker – The Complete Developer Guide">
+<meta property="og:description" content="A complete professional reference for Docker — containers, images, volumes, networking, Compose, CI/CD, and deployment.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://hebypaul.github.io/docker-guide/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Docker – The Complete Developer Guide">
+<meta name="twitter:description" content="Everything you need: containers, images, Compose, CI/CD, deployment. Written for fullstack devs.">
+<meta name="theme-color" content="#0d1117">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -28,7 +37,13 @@
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
-  html { height: 100%; }
+  html {
+    height: 100%;
+    scroll-behavior: smooth;
+    /* Firefox global scrollbar */
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) var(--bg);
+  }
 
   body {
     background: var(--bg);
@@ -131,9 +146,6 @@
     overflow-y: auto;
     border-right: 1px solid var(--border);
     padding: 32px 20px;
-    scrollbar-width: thin;
-    scrollbar-color: var(--border) transparent;
-    /* Ensures sidebar doesn't expand the flex row height */
     align-self: flex-start;
   }
   nav.toc::-webkit-scrollbar { width: 4px; }
@@ -182,7 +194,20 @@
   }
 
   /* ── SECTIONS ── */
-  section { margin-bottom: 72px; scroll-margin-top: 24px; }
+  section { margin-bottom: 72px; scroll-margin-top: 50px; }
+
+  /* ── FOCUS STYLES (keyboard accessibility) ── */
+  :focus-visible {
+    outline: 2px solid var(--docker-blue);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  /* ── REDUCED MOTION ── */
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+  }
 
   h2 {
     font-size: 1.5rem;
@@ -424,8 +449,106 @@
 
   @media (max-width: 900px) {
     nav.toc { display: none; }
-    main { padding: 32px 24px 60px; }
+    main { padding: 32px 20px 60px; }
+    h2 { font-size: 1.3rem; }
+    pre { font-size: 12.5px; padding: 16px; }
+    .pre-header { font-size: 11px; padding: 7px 14px; }
+    .card-grid { grid-template-columns: 1fr 1fr; }
+    .flow { gap: 4px; }
+    .flow-step { min-width: 80px; font-size: 11px; padding: 8px 10px; }
+    header { padding: 40px 20px 36px; }
   }
+
+  @media (max-width: 520px) {
+    .card-grid { grid-template-columns: 1fr; }
+    .header-tags { gap: 6px; }
+    main { padding: 24px 16px 60px; }
+  }
+
+  /* ── PRINT STYLES ── */
+  @media print {
+    nav.toc, #back-to-top { display: none; }
+    main { padding: 0; }
+    body { background: #fff; color: #000; font-size: 12pt; }
+    pre { background: #f5f5f5; border: 1px solid #ccc; color: #000; font-size: 10pt; }
+    a { color: #000; text-decoration: underline; }
+    .section-line { background: #ccc; }
+    h2, h3 { color: #000; }
+    p, li { color: #222; }
+  }
+
+  /* ── GLOBAL SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 6px;
+    border: 2px solid var(--bg);
+  }
+  ::-webkit-scrollbar-thumb:hover { background: var(--docker-blue); }
+
+  /* ── COPY BUTTON ── */
+  .pre-wrap { position: relative; }
+  pre { position: relative; }
+  .copy-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(28, 35, 51, 0.85);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    color: var(--text-muted);
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    padding: 4px 10px;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.15s, background 0.15s, color 0.15s, border-color 0.15s;
+    user-select: none;
+    z-index: 10;
+    backdrop-filter: blur(4px);
+  }
+  pre:hover .copy-btn { opacity: 1; }
+  .copy-btn:hover { background: var(--docker-blue); border-color: var(--docker-blue); color: #fff; }
+  .copy-btn.copied { background: var(--green); border-color: var(--green); color: #fff; opacity: 1; }
+
+  /* ── RESPONSIVE TABLE WRAPPER ── */
+  .table-wrap { overflow-x: auto; width: 100%; margin-bottom: 4px; }
+  .table-wrap .cmd-table { margin-bottom: 0; }
+
+  /* ── ACTIVE TOC LINK ── */
+  nav.toc a.active {
+    background: rgba(13,183,237,0.08);
+    color: var(--docker-blue);
+    border-left-color: var(--docker-blue);
+  }
+
+  /* ── BACK TO TOP BUTTON ── */
+  #back-to-top {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text-muted);
+    font-size: 18px;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s, background 0.15s, color 0.15s;
+    z-index: 100;
+    text-decoration: none;
+  }
+  #back-to-top.visible { opacity: 1; pointer-events: auto; }
+  #back-to-top:hover { background: var(--docker-blue); border-color: var(--docker-blue); color: #fff; text-decoration: none; }
 </style>
 </head>
 <body>
@@ -455,7 +578,7 @@
 <div class="layout">
 
 <!-- ── TOC ── -->
-<nav class="toc">
+<nav class="toc" aria-label="Table of contents">
   <div class="toc-title">Contents</div>
 
   <div class="toc-section-header">Fundamentals</div>
@@ -548,8 +671,8 @@
   </div>
 
   <div class="doc-links">
-    <a class="doc-link" href="https://docs.docker.com/get-started/overview/" target="_blank">Docker Overview</a>
-    <a class="doc-link" href="https://docs.docker.com/get-started/" target="_blank">Official Get Started</a>
+    <a class="doc-link" href="https://docs.docker.com/get-started/overview/" target="_blank" rel="noopener noreferrer">Docker Overview</a>
+    <a class="doc-link" href="https://docs.docker.com/get-started/" target="_blank" rel="noopener noreferrer">Official Get Started</a>
   </div>
 </section>
 
@@ -560,25 +683,27 @@
 
   <p>Install <strong>Docker Desktop</strong> (macOS / Windows) or <strong>Docker Engine</strong> (Linux). Desktop includes the daemon, CLI, Compose, BuildKit, and a GUI.</p>
 
-  <div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> verify installation</div>
+  <div class="pre-wrap"><div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> verify installation</div>
   <pre><code><span class="cmd">docker</span> <span class="arg">--version</span>
 <span class="cmd">docker</span> <span class="arg">info</span>
 <span class="cmd">docker</span> <span class="arg">run</span> hello-world          <span class="comment"># pulls & runs a test container</span></code></pre>
+  </div>
 
   <h3>Docker Context — Switch Between Environments</h3>
   <p>Contexts let you target <strong>different Docker daemons</strong> (local, remote SSH host, Kubernetes) from the same CLI.</p>
 
-  <div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> docker context</div>
+  <div class="pre-wrap"><div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> docker context</div>
   <pre><code><span class="cmd">docker context</span> ls                           <span class="comment"># list contexts</span>
 <span class="cmd">docker context</span> create remote \
   <span class="flag">--docker</span> <span class="str">"host=ssh://user@remote-host"</span>      <span class="comment"># create SSH context</span>
 <span class="cmd">docker context</span> use remote                   <span class="comment"># switch to remote</span>
 <span class="cmd">docker context</span> use default                  <span class="comment"># back to local</span></code></pre>
+  </div>
 
   <div class="doc-links">
-    <a class="doc-link" href="https://docs.docker.com/desktop/install/mac-install/" target="_blank">Install Docker Desktop (Mac)</a>
-    <a class="doc-link" href="https://docs.docker.com/engine/install/" target="_blank">Install Docker Engine (Linux)</a>
-    <a class="doc-link" href="https://docs.docker.com/engine/context/working-with-contexts/" target="_blank">Docker Contexts</a>
+    <a class="doc-link" href="https://docs.docker.com/desktop/install/mac-install/" target="_blank" rel="noopener noreferrer">Install Docker Desktop (Mac)</a>
+    <a class="doc-link" href="https://docs.docker.com/engine/install/" target="_blank" rel="noopener noreferrer">Install Docker Engine (Linux)</a>
+    <a class="doc-link" href="https://docs.docker.com/engine/context/working-with-contexts/" target="_blank" rel="noopener noreferrer">Docker Contexts</a>
   </div>
 </section>
 
@@ -589,7 +714,7 @@
 
   <p>Images are <strong>immutable, layered filesystems</strong>. Each Dockerfile instruction adds a new layer. Layers are cached and shared across images — making builds fast and pulls efficient.</p>
 
-  <div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> image commands</div>
+  <div class="pre-wrap"><div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> image commands</div>
   <pre><code><span class="cmd">docker image</span> ls                             <span class="comment"># list local images</span>
 <span class="cmd">docker image</span> ls <span class="flag">-a</span>                         <span class="comment"># include intermediate layers</span>
 <span class="cmd">docker pull</span> node:<span class="arg">20-alpine</span>                 <span class="comment"># pull a specific tag</span>
@@ -601,6 +726,7 @@
 <span class="cmd">docker tag</span> my-app:<span class="arg">latest</span> my-app:<span class="arg">1.0.2</span>    <span class="comment"># re-tag an image</span>
 <span class="cmd">docker save</span> <span class="flag">-o</span> app.tar my-app             <span class="comment"># export image to tar</span>
 <span class="cmd">docker load</span> <span class="flag">-i</span> app.tar                    <span class="comment"># import image from tar</span></code></pre>
+  </div>
 
   <div class="callout info">
     <div class="callout-icon">ℹ️</div>
@@ -612,8 +738,8 @@
   </div>
 
   <div class="doc-links">
-    <a class="doc-link" href="https://docs.docker.com/reference/cli/docker/image/" target="_blank">Image CLI Reference</a>
-    <a class="doc-link" href="https://hub.docker.com/search?q=&type=image&image_filter=official" target="_blank">Docker Hub Official Images</a>
+    <a class="doc-link" href="https://docs.docker.com/reference/cli/docker/image/" target="_blank" rel="noopener noreferrer">Image CLI Reference</a>
+    <a class="doc-link" href="https://hub.docker.com/search?q=&type=image&image_filter=official" target="_blank" rel="noopener noreferrer">Docker Hub Official Images</a>
   </div>
 </section>
 
@@ -625,7 +751,7 @@
   <p>Containers are running (or stopped) instances of images. They are ephemeral by design — data written inside is lost when removed unless persisted via volumes.</p>
 
   <h3>Running Containers</h3>
-  <div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> docker run flags</div>
+  <div class="pre-wrap"><div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> docker run flags</div>
   <pre><code><span class="cmd">docker run</span> nginx                            <span class="comment"># run in foreground (blocking)</span>
 <span class="cmd">docker run</span> <span class="flag">-d</span> nginx                        <span class="comment"># detached (background)</span>
 <span class="cmd">docker run</span> <span class="flag">-d</span> <span class="flag">--name</span> web nginx             <span class="comment"># named container</span>
@@ -638,9 +764,10 @@
 <span class="cmd">docker run</span> <span class="flag">--cpus</span> 0.5 <span class="flag">--memory</span> 256m app   <span class="comment"># limit resources</span>
 <span class="cmd">docker run</span> <span class="flag">--network</span> mynet app             <span class="comment"># join a named network</span>
 <span class="cmd">docker run</span> <span class="flag">--restart</span> unless-stopped app    <span class="comment"># auto-restart policy</span></code></pre>
+  </div>
 
   <h3>Lifecycle Management</h3>
-  <div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> container lifecycle</div>
+  <div class="pre-wrap"><div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> container lifecycle</div>
   <pre><code><span class="cmd">docker ps</span>                                  <span class="comment"># running containers</span>
 <span class="cmd">docker ps</span> <span class="flag">-a</span>                              <span class="comment"># all containers</span>
 <span class="cmd">docker ps</span> <span class="flag">--format</span> <span class="str">"table {{.Names}}\t{{.Status}}\t{{.Ports}}"</span>
@@ -652,9 +779,10 @@
 <span class="cmd">docker rm</span> web                             <span class="comment"># remove stopped container</span>
 <span class="cmd">docker rm</span> <span class="flag">-f</span> web                          <span class="comment"># force remove (even if running)</span>
 <span class="cmd">docker container prune</span>                   <span class="comment"># remove all stopped containers</span></code></pre>
+  </div>
 
   <h3>Interacting with Running Containers</h3>
-  <div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> exec / logs / inspect</div>
+  <div class="pre-wrap"><div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> exec / logs / inspect</div>
   <pre><code><span class="cmd">docker exec</span> <span class="flag">-it</span> web bash                  <span class="comment"># open shell inside container</span>
 <span class="cmd">docker exec</span> web cat /etc/nginx/nginx.conf  <span class="comment"># run one-off command</span>
 
@@ -671,10 +799,11 @@
 <span class="cmd">docker diff</span> web                           <span class="comment"># filesystem changes</span>
 <span class="cmd">docker cp</span> web:/app/output.log ./          <span class="comment"># copy file out</span>
 <span class="cmd">docker cp</span> ./config.json web:/app/         <span class="comment"># copy file in</span></code></pre>
+  </div>
 
   <div class="doc-links">
-    <a class="doc-link" href="https://docs.docker.com/reference/cli/docker/container/" target="_blank">Container CLI Reference</a>
-    <a class="doc-link" href="https://docs.docker.com/reference/cli/docker/container/run/" target="_blank">docker run Reference</a>
+    <a class="doc-link" href="https://docs.docker.com/reference/cli/docker/container/" target="_blank" rel="noopener noreferrer">Container CLI Reference</a>
+    <a class="doc-link" href="https://docs.docker.com/reference/cli/docker/container/run/" target="_blank" rel="noopener noreferrer">docker run Reference</a>
   </div>
 </section>
 
@@ -686,7 +815,7 @@
   <p>The Dockerfile defines every layer of your image. Every instruction that changes the filesystem creates a new cached layer. Order matters — put infrequently-changing instructions first.</p>
 
   <h3>All Core Instructions</h3>
-  <div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> Dockerfile</div>
+  <div class="pre-wrap"><div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> Dockerfile</div>
   <pre><code><span class="dockerfile-comment"># syntax=docker/dockerfile:1</span>
 
 <span class="dockerfile-instruction">FROM</span>       node:<span class="dockerfile-arg">20-alpine</span>               <span class="comment"># base image (always first)</span>
@@ -727,18 +856,20 @@
 <span class="dockerfile-instruction">ONBUILD</span>    COPY . .                      <span class="comment"># trigger for child images</span>
 <span class="dockerfile-instruction">STOPSIGNAL</span> SIGTERM                       <span class="comment"># signal used to stop container</span>
 <span class="dockerfile-instruction">SHELL</span>      [<span class="str">"/bin/bash"</span>, <span class="str">"-c"</span>]           <span class="comment"># change default shell</span></code></pre>
+  </div>
 
   <h3>CMD vs ENTRYPOINT</h3>
-  <table class="cmd-table">
+  <div class="table-wrap"><table class="cmd-table">
     <tr><th>Scenario</th><th>Use</th></tr>
     <tr><td>Default command, overridable by user</td><td><code>CMD ["node", "server.js"]</code></td></tr>
     <tr><td>Always run this binary, allow args</td><td><code>ENTRYPOINT ["node"]</code> + <code>CMD ["server.js"]</code></td></tr>
     <tr><td>Fixed wrapper script</td><td><code>ENTRYPOINT ["./entrypoint.sh"]</code></td></tr>
   </table>
+  </div>
 
   <h3>.dockerignore</h3>
   <p>Always add a <code>.dockerignore</code> to exclude files from the build context — keeps builds fast and images lean.</p>
-  <div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> .dockerignore</div>
+  <div class="pre-wrap"><div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> .dockerignore</div>
   <pre><code>node_modules
 .git
 .gitignore
@@ -750,10 +881,11 @@ coverage
 **/*.test.ts
 README.md
 .DS_Store</code></pre>
+  </div>
 
   <div class="doc-links">
-    <a class="doc-link" href="https://docs.docker.com/reference/dockerfile/" target="_blank">Dockerfile Reference</a>
-    <a class="doc-link" href="https://docs.docker.com/build/building/best-practices/" target="_blank">Build Best Practices</a>
+    <a class="doc-link" href="https://docs.docker.com/reference/dockerfile/" target="_blank" rel="noopener noreferrer">Dockerfile Reference</a>
+    <a class="doc-link" href="https://docs.docker.com/build/building/best-practices/" target="_blank" rel="noopener noreferrer">Build Best Practices</a>
   </div>
 </section>
 
@@ -763,7 +895,7 @@ README.md
   <div class="section-line"></div>
 
   <h3>Layer Caching — Order Your Instructions Wisely</h3>
-  <div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> Bad vs Good</div>
+  <div class="pre-wrap"><div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> Bad vs Good</div>
   <pre><code><span class="comment"># ❌ Bad — copies ALL files first, busts cache on every code change</span>
 <span class="dockerfile-instruction">COPY</span> . .
 <span class="dockerfile-instruction">RUN</span>  npm ci
@@ -772,9 +904,10 @@ README.md
 <span class="dockerfile-instruction">COPY</span> package*.json ./
 <span class="dockerfile-instruction">RUN</span>  npm ci
 <span class="dockerfile-instruction">COPY</span> . .</code></pre>
+  </div>
 
   <h3>BuildKit — Enable for Faster Builds</h3>
-  <div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> buildkit</div>
+  <div class="pre-wrap"><div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> buildkit</div>
   <pre><code><span class="comment"># Enable for single build</span>
 <span class="kw">DOCKER_BUILDKIT</span>=1 <span class="cmd">docker build</span> <span class="flag">-t</span> my-app .
 
@@ -790,10 +923,11 @@ README.md
 <span class="dockerfile-instruction">RUN</span> <span class="flag">--mount=type=secret,id=npmrc,target=/root/.npmrc</span> \
     npm ci
 <span class="comment"># Build with:  docker build --secret id=npmrc,src=.npmrc .</span></code></pre>
+  </div>
 
   <div class="doc-links">
-    <a class="doc-link" href="https://docs.docker.com/build/buildkit/" target="_blank">BuildKit Docs</a>
-    <a class="doc-link" href="https://docs.docker.com/build/cache/" target="_blank">Build Cache</a>
+    <a class="doc-link" href="https://docs.docker.com/build/buildkit/" target="_blank" rel="noopener noreferrer">BuildKit Docs</a>
+    <a class="doc-link" href="https://docs.docker.com/build/cache/" target="_blank" rel="noopener noreferrer">Build Cache</a>
   </div>
 </section>
 
@@ -805,7 +939,7 @@ README.md
   <p>Multi-stage builds let you use <strong>heavyweight build tools</strong> (compilers, bundlers) without including them in the final image. Production images stay small and secure.</p>
 
   <h3>Node.js Example</h3>
-  <div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> Dockerfile (Node + React)</div>
+  <div class="pre-wrap"><div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> Dockerfile (Node + React)</div>
   <pre><code><span class="comment"># syntax=docker/dockerfile:1</span>
 
 <span class="comment"># ── Stage 1: build frontend ──────────────────────────────</span>
@@ -835,12 +969,13 @@ README.md
 <span class="dockerfile-instruction">HEALTHCHECK</span> <span class="flag">--interval=30s</span> <span class="kw">CMD</span> wget <span class="flag">-qO-</span> http://localhost:3000/health || exit 1
 <span class="dockerfile-instruction">CMD</span> [<span class="str">"node"</span>, <span class="str">"src/server.js"</span>]</code></pre>
 
-  <div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> build specific stage</div>
+  <div class="pre-wrap"><div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> build specific stage</div>
   <pre><code><span class="cmd">docker build</span> <span class="flag">--target</span> backend-builder <span class="flag">-t</span> my-app:dev .   <span class="comment"># stop at a stage</span>
 <span class="cmd">docker build</span> <span class="flag">--target</span> production <span class="flag">-t</span> my-app:prod .        <span class="comment"># final prod image</span></code></pre>
+  </div>
 
   <div class="doc-links">
-    <a class="doc-link" href="https://docs.docker.com/build/building/multi-stage/" target="_blank">Multi-Stage Builds</a>
+    <a class="doc-link" href="https://docs.docker.com/build/building/multi-stage/" target="_blank" rel="noopener noreferrer">Multi-Stage Builds</a>
   </div>
 </section>
 
@@ -851,14 +986,15 @@ README.md
 
   <p>Containers are ephemeral — their writable layer is destroyed on <code>docker rm</code>. Use volumes or bind mounts for persistence.</p>
 
-  <table class="cmd-table">
+  <div class="table-wrap"><table class="cmd-table">
     <tr><th>Type</th><th>Use Case</th><th>Host Path</th></tr>
     <tr><td>Named Volume</td><td>Databases, persistent app data</td><td>Managed by Docker (<code>/var/lib/docker/volumes/…</code>)</td></tr>
     <tr><td>Bind Mount</td><td>Local dev, source code hot-reload</td><td>Any host path you specify</td></tr>
     <tr><td>tmpfs</td><td>Temporary in-memory data, secrets</td><td>RAM only, never written to disk</td></tr>
   </table>
+  </div>
 
-  <div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> volumes</div>
+  <div class="pre-wrap"><div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> volumes</div>
   <pre><code><span class="comment"># ── Named Volumes ────────────────────────────────────────</span>
 <span class="cmd">docker volume</span> create pgdata
 <span class="cmd">docker volume</span> ls
@@ -876,6 +1012,7 @@ README.md
 <span class="comment"># ── tmpfs ────────────────────────────────────────────────</span>
 <span class="cmd">docker run</span> <span class="flag">--tmpfs</span> /tmp:rw,size=64m app
 <span class="cmd">docker run</span> <span class="flag">--mount</span> <span class="str">type=tmpfs,destination=/tmp</span> app</code></pre>
+  </div>
 
   <div class="callout tip">
     <div class="callout-icon">💡</div>
@@ -886,8 +1023,8 @@ README.md
   </div>
 
   <div class="doc-links">
-    <a class="doc-link" href="https://docs.docker.com/engine/storage/volumes/" target="_blank">Volumes</a>
-    <a class="doc-link" href="https://docs.docker.com/engine/storage/bind-mounts/" target="_blank">Bind Mounts</a>
+    <a class="doc-link" href="https://docs.docker.com/engine/storage/volumes/" target="_blank" rel="noopener noreferrer">Volumes</a>
+    <a class="doc-link" href="https://docs.docker.com/engine/storage/bind-mounts/" target="_blank" rel="noopener noreferrer">Bind Mounts</a>
   </div>
 </section>
 
@@ -898,7 +1035,7 @@ README.md
 
   <p>Docker containers communicate over virtual networks. By default each container gets a virtual NIC on the bridge network. Containers on the <strong>same user-defined network</strong> can reach each other by container name (DNS auto-discovery).</p>
 
-  <table class="cmd-table">
+  <div class="table-wrap"><table class="cmd-table">
     <tr><th>Driver</th><th>When to Use</th></tr>
     <tr><td>bridge</td><td>Default. Isolated network on a single host. Containers talk by name.</td></tr>
     <tr><td>host</td><td>Container shares host network stack. Max performance, no isolation.</td></tr>
@@ -906,8 +1043,9 @@ README.md
     <tr><td>none</td><td>No networking at all.</td></tr>
     <tr><td>macvlan</td><td>Assign a MAC address — appears as physical device on network.</td></tr>
   </table>
+  </div>
 
-  <div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> network commands</div>
+  <div class="pre-wrap"><div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> network commands</div>
   <pre><code><span class="cmd">docker network</span> ls
 <span class="cmd">docker network</span> create appnet
 <span class="cmd">docker network</span> create <span class="flag">--driver</span> overlay swarmnet   <span class="comment"># for Swarm</span>
@@ -930,10 +1068,11 @@ README.md
 <span class="cmd">docker run</span> <span class="flag">-p</span> 3000:3000 app          <span class="comment"># bind all interfaces</span>
 <span class="cmd">docker run</span> <span class="flag">-p</span> 127.0.0.1:3000:3000 app <span class="comment"># localhost only (more secure)</span>
 <span class="cmd">docker run</span> <span class="flag">-P</span> app                    <span class="comment"># auto-assign host ports</span></code></pre>
+  </div>
 
   <div class="doc-links">
-    <a class="doc-link" href="https://docs.docker.com/engine/network/" target="_blank">Networking Overview</a>
-    <a class="doc-link" href="https://docs.docker.com/engine/network/drivers/bridge/" target="_blank">Bridge Network Driver</a>
+    <a class="doc-link" href="https://docs.docker.com/engine/network/" target="_blank" rel="noopener noreferrer">Networking Overview</a>
+    <a class="doc-link" href="https://docs.docker.com/engine/network/drivers/bridge/" target="_blank" rel="noopener noreferrer">Bridge Network Driver</a>
   </div>
 </section>
 
@@ -942,7 +1081,7 @@ README.md
   <h2 data-icon="🔧">Environment & Config</h2>
   <div class="section-line"></div>
 
-  <div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> env patterns</div>
+  <div class="pre-wrap"><div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> env patterns</div>
   <pre><code><span class="comment"># Single var at runtime</span>
 <span class="cmd">docker run</span> <span class="flag">-e</span> <span class="str">DATABASE_URL=postgres://...</span> app
 
@@ -954,12 +1093,13 @@ README.md
 
 <span class="comment"># Dockerfile: build-time ARG vs runtime ENV</span></code></pre>
 
-  <div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> ARG vs ENV</div>
+  <div class="pre-wrap"><div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> ARG vs ENV</div>
   <pre><code><span class="dockerfile-instruction">ARG</span>  COMMIT_SHA                        <span class="comment"># available during build only</span>
 <span class="dockerfile-instruction">ENV</span>  COMMIT_SHA=$COMMIT_SHA            <span class="comment"># expose ARG as runtime ENV</span>
 <span class="dockerfile-instruction">ENV</span>  NODE_ENV=production               <span class="comment"># always set at runtime</span>
 
 <span class="comment"># Build: docker build --build-arg COMMIT_SHA=abc123 .</span></code></pre>
+  </div>
 
   <div class="callout warn">
     <div class="callout-icon">⚠️</div>
@@ -977,7 +1117,7 @@ README.md
 
   <p>Compose lets you define and run <strong>multi-container applications</strong> from a single YAML file. One command starts your entire stack.</p>
 
-  <div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> docker-compose.yml — full example</div>
+  <div class="pre-wrap"><div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> docker-compose.yml — full example</div>
   <pre><code><span class="kw">name</span>: myapp
 
 <span class="kw">services</span>:
@@ -1057,9 +1197,10 @@ README.md
 <span class="kw">networks</span>:
   backend:
     <span class="kw">driver</span>: bridge</code></pre>
+  </div>
 
   <h3>Essential Compose Commands</h3>
-  <div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> docker compose</div>
+  <div class="pre-wrap"><div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> docker compose</div>
   <pre><code><span class="cmd">docker compose</span> up                         <span class="comment"># start all services (foreground)</span>
 <span class="cmd">docker compose</span> up <span class="flag">-d</span>                     <span class="comment"># detached</span>
 <span class="cmd">docker compose</span> up <span class="flag">--build</span>               <span class="comment"># rebuild images first</span>
@@ -1078,10 +1219,11 @@ README.md
 <span class="cmd">docker compose</span> config                     <span class="comment"># validate & view merged YAML</span>
 <span class="cmd">docker compose</span> pull                       <span class="comment"># pull latest base images</span>
 <span class="cmd">docker compose</span> top                        <span class="comment"># processes in each service</span></code></pre>
+  </div>
 
   <div class="doc-links">
-    <a class="doc-link" href="https://docs.docker.com/compose/compose-file/" target="_blank">Compose File Reference</a>
-    <a class="doc-link" href="https://docs.docker.com/reference/cli/docker/compose/" target="_blank">Compose CLI Reference</a>
+    <a class="doc-link" href="https://docs.docker.com/compose/compose-file/" target="_blank" rel="noopener noreferrer">Compose File Reference</a>
+    <a class="doc-link" href="https://docs.docker.com/reference/cli/docker/compose/" target="_blank" rel="noopener noreferrer">Compose CLI Reference</a>
   </div>
 </section>
 
@@ -1092,7 +1234,7 @@ README.md
 
   <h3>Override Files (dev vs prod)</h3>
   <p>Use <code>docker-compose.override.yml</code> for dev-specific settings — it's merged automatically.</p>
-  <div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> docker-compose.override.yml (dev only)</div>
+  <div class="pre-wrap"><div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> docker-compose.override.yml (dev only)</div>
   <pre><code><span class="kw">services</span>:
   <span class="kw">api</span>:
     <span class="kw">build</span>:
@@ -1104,11 +1246,12 @@ README.md
     <span class="kw">environment</span>:
       - NODE_ENV=development</code></pre>
 
-  <div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> explicit file selection</div>
+  <div class="pre-wrap"><div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> explicit file selection</div>
   <pre><code><span class="cmd">docker compose</span> <span class="flag">-f</span> docker-compose.yml <span class="flag">-f</span> docker-compose.prod.yml up <span class="flag">-d</span></code></pre>
+  </div>
 
   <h3>Profiles — Conditional Services</h3>
-  <div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> profiles</div>
+  <div class="pre-wrap"><div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> profiles</div>
   <pre><code><span class="kw">services</span>:
   <span class="kw">adminer</span>:
     <span class="kw">image</span>: adminer
@@ -1123,7 +1266,7 @@ README.md
   <h2 data-icon="🏛️">Registries & Pushing Images</h2>
   <div class="section-line"></div>
 
-  <div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> push to Docker Hub</div>
+  <div class="pre-wrap"><div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> push to Docker Hub</div>
   <pre><code><span class="cmd">docker login</span>                                      <span class="comment"># Docker Hub</span>
 <span class="cmd">docker login</span> ghcr.io <span class="flag">-u</span> USERNAME <span class="flag">--password-stdin</span>  <span class="comment"># GHCR</span>
 <span class="cmd">docker login</span> 123456789.dkr.ecr.us-east-1.amazonaws.com  <span class="comment"># ECR (use aws ecr get-login-password)</span>
@@ -1137,11 +1280,12 @@ README.md
   <span class="flag">--platform</span> linux/amd64,linux/arm64 \
   <span class="flag">-t</span> myuser/myapp:<span class="arg">1.0.0</span> \
   <span class="flag">--push</span> .</code></pre>
+  </div>
 
   <div class="doc-links">
-    <a class="doc-link" href="https://docs.docker.com/reference/cli/docker/buildx/" target="_blank">Buildx Reference</a>
-    <a class="doc-link" href="https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry" target="_blank">GitHub Container Registry</a>
-    <a class="doc-link" href="https://docs.aws.amazon.com/AmazonECR/latest/userguide/getting-started-cli.html" target="_blank">AWS ECR Guide</a>
+    <a class="doc-link" href="https://docs.docker.com/reference/cli/docker/buildx/" target="_blank" rel="noopener noreferrer">Buildx Reference</a>
+    <a class="doc-link" href="https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry" target="_blank" rel="noopener noreferrer">GitHub Container Registry</a>
+    <a class="doc-link" href="https://docs.aws.amazon.com/AmazonECR/latest/userguide/getting-started-cli.html" target="_blank" rel="noopener noreferrer">AWS ECR Guide</a>
   </div>
 </section>
 
@@ -1151,7 +1295,7 @@ README.md
   <div class="section-line"></div>
 
   <h3>GitHub Actions — Build, Test & Push</h3>
-  <div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> .github/workflows/docker.yml</div>
+  <div class="pre-wrap"><div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> .github/workflows/docker.yml</div>
   <pre><code><span class="kw">name</span>: Build & Push
 
 <span class="kw">on</span>:
@@ -1191,9 +1335,10 @@ README.md
           <span class="kw">labels</span>: ${{ steps.meta.outputs.labels }}
           <span class="kw">cache-from</span>: type=gha          <span class="comment"># GitHub Actions cache</span>
           <span class="kw">cache-to</span>: type=gha,mode=max</code></pre>
+  </div>
 
   <h3>CI Commands Reference</h3>
-  <div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> CI/CD shell commands</div>
+  <div class="pre-wrap"><div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> CI/CD shell commands</div>
   <pre><code><span class="comment"># Run tests inside a container (no local deps needed)</span>
 <span class="cmd">docker run</span> <span class="flag">--rm</span> <span class="flag">-v</span> $(pwd):/app <span class="flag">-w</span> /app node:20 npm test
 
@@ -1204,10 +1349,11 @@ README.md
 <span class="comment"># Scan image for vulnerabilities (Docker Scout)</span>
 <span class="cmd">docker scout</span> cves myapp:<span class="arg">latest</span>
 <span class="cmd">docker scout</span> quickview myapp:<span class="arg">latest</span></code></pre>
+  </div>
 
   <div class="doc-links">
-    <a class="doc-link" href="https://docs.docker.com/build/ci/github-actions/" target="_blank">Docker GitHub Actions</a>
-    <a class="doc-link" href="https://docs.docker.com/scout/" target="_blank">Docker Scout (Security Scanning)</a>
+    <a class="doc-link" href="https://docs.docker.com/build/ci/github-actions/" target="_blank" rel="noopener noreferrer">Docker GitHub Actions</a>
+    <a class="doc-link" href="https://docs.docker.com/scout/" target="_blank" rel="noopener noreferrer">Docker Scout (Security Scanning)</a>
   </div>
 </section>
 
@@ -1217,7 +1363,7 @@ README.md
   <div class="section-line"></div>
 
   <h3>Single Host (SSH + Compose)</h3>
-  <div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> deploy to remote host</div>
+  <div class="pre-wrap"><div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> deploy to remote host</div>
   <pre><code><span class="comment"># Create SSH context pointing to prod server</span>
 <span class="cmd">docker context</span> create prod \
   <span class="flag">--docker</span> <span class="str">"host=ssh://<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="4d29283d2122340d3d3f22296328352c203d2128632e2220">[email&#160;protected]</a>"</span>
@@ -1229,9 +1375,10 @@ README.md
 <span class="comment"># Or set context for the whole session</span>
 <span class="kw">export</span> DOCKER_CONTEXT=prod
 <span class="cmd">docker compose</span> pull && <span class="cmd">docker compose</span> up <span class="flag">-d</span></code></pre>
+  </div>
 
   <h3>Docker Swarm (Multi-Host)</h3>
-  <div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> swarm</div>
+  <div class="pre-wrap"><div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> swarm</div>
   <pre><code><span class="comment"># Initialize a Swarm</span>
 <span class="cmd">docker swarm</span> init <span class="flag">--advertise-addr</span> <MANAGER_IP>
 <span class="cmd">docker swarm</span> join <span class="flag">--token</span> <TOKEN> MANAGER:2377   <span class="comment"># on worker nodes</span>
@@ -1247,6 +1394,7 @@ README.md
 <span class="cmd">docker service</span> scale myapp_api=5
 <span class="cmd">docker service</span> ls
 <span class="cmd">docker service</span> update <span class="flag">--image</span> myapp/api:<span class="arg">2.0</span> myapp_api  <span class="comment"># rolling update</span></code></pre>
+  </div>
 
   <div class="callout info">
     <div class="callout-icon">ℹ️</div>
@@ -1257,8 +1405,8 @@ README.md
   </div>
 
   <div class="doc-links">
-    <a class="doc-link" href="https://docs.docker.com/engine/swarm/" target="_blank">Docker Swarm Mode</a>
-    <a class="doc-link" href="https://docs.docker.com/reference/cli/docker/stack/" target="_blank">docker stack Reference</a>
+    <a class="doc-link" href="https://docs.docker.com/engine/swarm/" target="_blank" rel="noopener noreferrer">Docker Swarm Mode</a>
+    <a class="doc-link" href="https://docs.docker.com/reference/cli/docker/stack/" target="_blank" rel="noopener noreferrer">docker stack Reference</a>
   </div>
 </section>
 
@@ -1267,7 +1415,7 @@ README.md
   <h2 data-icon="🔒">Security</h2>
   <div class="section-line"></div>
 
-  <div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> security practices</div>
+  <div class="pre-wrap"><div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> security practices</div>
   <pre><code><span class="comment"># 1. Run as non-root user</span>
 <span class="dockerfile-instruction">RUN</span> addgroup <span class="flag">-S</span> appgroup && adduser <span class="flag">-S</span> appuser <span class="flag">-G</span> appgroup
 <span class="dockerfile-instruction">USER</span> appuser
@@ -1291,6 +1439,7 @@ README.md
 <span class="comment"># 7. Minimal base images</span>
 <span class="comment"># Use alpine, distroless, or scratch where possible</span>
 <span class="dockerfile-instruction">FROM</span> gcr.io/distroless/nodejs20-debian12</code></pre>
+  </div>
 
   <div class="callout danger">
     <div class="callout-icon">🚨</div>
@@ -1301,9 +1450,9 @@ README.md
   </div>
 
   <div class="doc-links">
-    <a class="doc-link" href="https://docs.docker.com/engine/security/" target="_blank">Docker Security Guide</a>
-    <a class="doc-link" href="https://docs.docker.com/engine/swarm/secrets/" target="_blank">Docker Secrets</a>
-    <a class="doc-link" href="https://docs.docker.com/scout/" target="_blank">Docker Scout CVE Scanning</a>
+    <a class="doc-link" href="https://docs.docker.com/engine/security/" target="_blank" rel="noopener noreferrer">Docker Security Guide</a>
+    <a class="doc-link" href="https://docs.docker.com/engine/swarm/secrets/" target="_blank" rel="noopener noreferrer">Docker Secrets</a>
+    <a class="doc-link" href="https://docs.docker.com/scout/" target="_blank" rel="noopener noreferrer">Docker Scout CVE Scanning</a>
   </div>
 </section>
 
@@ -1312,7 +1461,7 @@ README.md
   <h2 data-icon="🐛">Debugging</h2>
   <div class="section-line"></div>
 
-  <div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> debug toolkit</div>
+  <div class="pre-wrap"><div class="pre-header"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span> debug toolkit</div>
   <pre><code><span class="comment"># Shell into a running container</span>
 <span class="cmd">docker exec</span> <span class="flag">-it</span> myapp sh
 
@@ -1341,10 +1490,11 @@ README.md
 <span class="cmd">docker system</span> df                            <span class="comment"># disk usage</span>
 <span class="cmd">docker system</span> prune                         <span class="comment"># remove stopped containers, unused images, networks</span>
 <span class="cmd">docker system</span> prune <span class="flag">-a</span> <span class="flag">--volumes</span>           <span class="comment"># nuclear option</span></code></pre>
+  </div>
 
   <div class="doc-links">
-    <a class="doc-link" href="https://docs.docker.com/reference/cli/docker/debug/" target="_blank">docker debug</a>
-    <a class="doc-link" href="https://docs.docker.com/config/containers/logging/" target="_blank">Logging Drivers</a>
+    <a class="doc-link" href="https://docs.docker.com/reference/cli/docker/debug/" target="_blank" rel="noopener noreferrer">docker debug</a>
+    <a class="doc-link" href="https://docs.docker.com/config/containers/logging/" target="_blank" rel="noopener noreferrer">Logging Drivers</a>
   </div>
 </section>
 
@@ -1354,7 +1504,7 @@ README.md
   <div class="section-line"></div>
 
   <h3>Images</h3>
-  <table class="cmd-table">
+  <div class="table-wrap"><table class="cmd-table">
     <tr><th>Command</th><th>Description</th></tr>
     <tr><td>docker build -t name:tag .</td><td>Build image from Dockerfile</td></tr>
     <tr><td>docker pull image:tag</td><td>Pull image from registry</td></tr>
@@ -1365,9 +1515,10 @@ README.md
     <tr><td>docker history image</td><td>Show layer history</td></tr>
     <tr><td>docker tag src dst</td><td>Tag/alias an image</td></tr>
   </table>
+  </div>
 
   <h3>Containers</h3>
-  <table class="cmd-table">
+  <div class="table-wrap"><table class="cmd-table">
     <tr><th>Command</th><th>Description</th></tr>
     <tr><td>docker run -d -p 8080:80 --name web nginx</td><td>Run detached with port and name</td></tr>
     <tr><td>docker run -it ubuntu bash</td><td>Interactive shell</td></tr>
@@ -1382,9 +1533,10 @@ README.md
     <tr><td>docker cp src container:/dst</td><td>Copy files in/out</td></tr>
     <tr><td>docker container prune</td><td>Remove all stopped containers</td></tr>
   </table>
+  </div>
 
   <h3>Volumes & Networks</h3>
-  <table class="cmd-table">
+  <div class="table-wrap"><table class="cmd-table">
     <tr><th>Command</th><th>Description</th></tr>
     <tr><td>docker volume create name</td><td>Create named volume</td></tr>
     <tr><td>docker volume ls / rm / prune</td><td>Manage volumes</td></tr>
@@ -1392,9 +1544,10 @@ README.md
     <tr><td>docker network connect net container</td><td>Attach container to network</td></tr>
     <tr><td>docker network ls / rm / prune</td><td>Manage networks</td></tr>
   </table>
+  </div>
 
   <h3>Compose</h3>
-  <table class="cmd-table">
+  <div class="table-wrap"><table class="cmd-table">
     <tr><th>Command</th><th>Description</th></tr>
     <tr><td>docker compose up -d --build</td><td>Build & start in background</td></tr>
     <tr><td>docker compose down -v</td><td>Stop, remove containers + volumes</td></tr>
@@ -1404,9 +1557,10 @@ README.md
     <tr><td>docker compose ps</td><td>Service status</td></tr>
     <tr><td>docker compose config</td><td>Validate merged YAML</td></tr>
   </table>
+  </div>
 
   <h3>System</h3>
-  <table class="cmd-table">
+  <div class="table-wrap"><table class="cmd-table">
     <tr><th>Command</th><th>Description</th></tr>
     <tr><td>docker system df</td><td>Disk usage breakdown</td></tr>
     <tr><td>docker system prune</td><td>Clean unused resources</td></tr>
@@ -1415,9 +1569,100 @@ README.md
     <tr><td>docker version</td><td>CLI + daemon versions</td></tr>
     <tr><td>docker context ls / use name</td><td>Switch environment</td></tr>
   </table>
+  </div>
 
-  <div class="doc-links">
-    <a class="doc-link" href="https://docs.docker.com/reference/cli/docker/" target="_blank">Full CLI Reference</a>
-    <a class="doc-link" href="https://docs.docker.com/guides/" target="_blank">Docker Guides</a>
-    <a class="doc-link" href="https://hub.docker.com/search?q=&type=image&image_filter=official" target="_blank">Official Images</a>
-    <a class="doc-link" href="https://do
+    <div class="doc-links">
+    <a class="doc-link" href="https://docs.docker.com/reference/cli/docker/" target="_blank" rel="noopener noreferrer">Full CLI Reference</a>
+    <a class="doc-link" href="https://docs.docker.com/guides/" target="_blank" rel="noopener noreferrer">Docker Guides</a>
+    <a class="doc-link" href="https://hub.docker.com/search?q=&type=image&image_filter=official" target="_blank" rel="noopener noreferrer">Official Images</a>
+    <a class="doc-link" href="https://docs.docker.com/compose/compose-file/" target="_blank" rel="noopener noreferrer">Compose Spec</a>
+    <a class="doc-link" href="https://docs.docker.com/build/building/best-practices/" target="_blank" rel="noopener noreferrer">Best Practices</a>
+  </div>
+
+</section>
+
+</main>
+</div>
+
+
+<a id="back-to-top" href="#" title="Back to top" aria-label="Back to top">↑</a>
+
+<script>
+// ── Copy Buttons ──────────────────────────────────────────────────────────────
+// Append button to <pre> so it floats over the code, not the header bar
+document.querySelectorAll('.pre-wrap').forEach(wrap => {
+  const pre = wrap.querySelector('pre');
+  if (!pre) return;
+  const btn = document.createElement('button');
+  btn.className = 'copy-btn';
+  btn.textContent = 'Copy';
+  btn.setAttribute('aria-label', 'Copy code to clipboard');
+  pre.appendChild(btn);  // lives inside pre, position: absolute top-right of pre
+  btn.addEventListener('click', () => {
+    // Get code text, stripping button's own text if innerText is used
+    const code = pre.querySelector('code');
+    const text = code ? code.innerText : pre.innerText.replace(/\nCopy$/, '').replace(/\nCopied!$/, '');
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'Copy';
+        btn.classList.remove('copied');
+      }, 2000);
+    }).catch(() => {
+      // Fallback for non-HTTPS or older browsers
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.cssText = 'position:fixed;top:-9999px;left:-9999px';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+    });
+  });
+});
+
+// ── Secure external links ─────────────────────────────────────────────────────
+document.querySelectorAll('a[target="_blank"]').forEach(a => {
+  if (!a.rel.includes('noopener')) {
+    a.setAttribute('rel', 'noopener noreferrer');
+  }
+});
+
+// ── Active TOC Highlight ──────────────────────────────────────────────────────
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('nav.toc a');
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    const link = document.querySelector(`nav.toc a[href="#${entry.target.id}"]`);
+    if (link) {
+      if (entry.isIntersecting) {
+        navLinks.forEach(l => l.classList.remove('active'));
+        link.classList.add('active');
+        // Scroll TOC to keep active link visible
+        link.scrollIntoView({ block: 'nearest' });
+      }
+    }
+  });
+}, { rootMargin: '-10% 0px -80% 0px', threshold: 0 });
+
+sections.forEach(s => observer.observe(s));
+
+// ── Back to Top ───────────────────────────────────────────────────────────────
+const backBtn = document.getElementById('back-to-top');
+window.addEventListener('scroll', () => {
+  if (window.scrollY > 400) backBtn.classList.add('visible');
+  else backBtn.classList.remove('visible');
+}, { passive: true });
+backBtn.addEventListener('click', (e) => {
+  e.preventDefault();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+</script>
+
+</body>
+</html>
