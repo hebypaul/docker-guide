@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Docker – The Complete Developer Guide</title>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #0d1117;
@@ -33,7 +33,7 @@
   body {
     background: var(--bg);
     color: var(--text);
-    font-family: 'Syne', sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     line-height: 1.7;
     font-size: 15px;
     min-height: 100%;
@@ -80,19 +80,20 @@
     font-size: 14px;
   }
   h1 {
-    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    font-size: clamp(2rem, 5vw, 3rem);
     font-weight: 800;
-    line-height: 1.1;
-    letter-spacing: -0.03em;
+    line-height: 1.15;
+    letter-spacing: -0.025em;
     color: #fff;
     margin-bottom: 16px;
   }
   h1 span { color: var(--docker-blue); }
   .header-sub {
     color: var(--text-dim);
-    font-size: 1rem;
+    font-size: 1.05rem;
+    font-weight: 400;
     max-width: 600px;
-    line-height: 1.6;
+    line-height: 1.65;
     margin-bottom: 28px;
   }
   .header-tags {
@@ -162,7 +163,8 @@
     border-radius: 5px;
     color: var(--text-dim);
     text-decoration: none;
-    font-size: 12.5px;
+    font-size: 13px;
+    font-weight: 500;
     transition: all 0.15s;
     border-left: 2px solid transparent;
   }
@@ -183,9 +185,9 @@
   section { margin-bottom: 72px; scroll-margin-top: 24px; }
 
   h2 {
-    font-size: 1.65rem;
-    font-weight: 800;
-    letter-spacing: -0.02em;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.015em;
     color: #fff;
     margin-bottom: 8px;
     display: flex;
@@ -204,8 +206,8 @@
   }
 
   h3 {
-    font-size: 1.05rem;
-    font-weight: 700;
+    font-size: 1rem;
+    font-weight: 600;
     color: var(--cyan);
     margin: 32px 0 12px;
     display: flex;
@@ -228,9 +230,9 @@
     overflow-x: auto;
     margin: 16px 0 24px;
     position: relative;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    line-height: 1.7;
+    font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+    font-size: 13.5px;
+    line-height: 1.75;
     scrollbar-width: thin;
     scrollbar-color: var(--border) transparent;
   }
@@ -242,8 +244,9 @@
     border-bottom: none;
     border-radius: 8px 8px 0 0;
     padding: 8px 16px;
-    font-size: 11px;
+    font-size: 11.5px;
     font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
     color: var(--text-muted);
     display: flex;
     align-items: center;
@@ -269,14 +272,21 @@
   .kw { color: var(--purple); }
   .val { color: var(--yellow); }
 
+  code {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 13.5px;
+  }
+
   /* Inline code */
   p code, li code {
     background: var(--surface2);
     border: 1px solid var(--border);
     border-radius: 4px;
-    padding: 1px 6px;
+    padding: 2px 7px;
     color: var(--orange);
-    font-size: 12px;
+    font-size: 12.5px;
+    font-weight: 500;
+    font-family: 'JetBrains Mono', monospace;
   }
 
   /* ── COMMAND TABLE ── */
@@ -284,7 +294,7 @@
     width: 100%;
     border-collapse: collapse;
     margin: 16px 0 28px;
-    font-size: 13px;
+    font-size: 13.5px;
   }
   .cmd-table th {
     background: var(--surface);
@@ -292,23 +302,25 @@
     padding: 10px 14px;
     text-align: left;
     font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
+    font-weight: 600;
+    letter-spacing: 0.07em;
     text-transform: uppercase;
     color: var(--text-muted);
   }
   .cmd-table td {
     border: 1px solid var(--border);
-    padding: 9px 14px;
+    padding: 10px 14px;
     color: var(--text-dim);
     vertical-align: top;
+    line-height: 1.6;
   }
   .cmd-table tr:hover td { background: var(--surface2); }
   .cmd-table td:first-child {
     font-family: 'JetBrains Mono', monospace;
     color: var(--orange);
     white-space: nowrap;
-    font-size: 12px;
+    font-size: 12.5px;
+    font-weight: 500;
   }
 
   /* ── CALLOUT BOXES ── */
@@ -318,7 +330,7 @@
     margin: 20px 0;
     display: flex;
     gap: 12px;
-    font-size: 13.5px;
+    font-size: 14px;
   }
   .callout-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
   .callout-body { color: var(--text-dim); }
@@ -343,8 +355,8 @@
   }
   .card:hover { border-color: rgba(13,183,237,0.4); transform: translateY(-2px); }
   .card-icon { font-size: 22px; margin-bottom: 10px; }
-  .card h4 { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
-  .card p { font-size: 12px; margin: 0; line-height: 1.5; }
+  .card h4 { font-size: 13.5px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+  .card p { font-size: 12.5px; margin: 0; line-height: 1.55; }
 
   /* ── FLOW DIAGRAM ── */
   .flow {
@@ -391,7 +403,8 @@
     border: 1px solid var(--border);
     border-radius: 6px;
     padding: 6px 12px;
-    font-size: 12px;
+    font-size: 12.5px;
+    font-weight: 500;
     color: var(--text-dim);
     text-decoration: none;
     transition: all 0.15s;
@@ -403,7 +416,7 @@
     padding-left: 20px;
     margin-bottom: 16px;
   }
-  li { color: var(--text-dim); margin-bottom: 5px; line-height: 1.65; }
+  li { color: var(--text-dim); margin-bottom: 6px; line-height: 1.7; font-size: 14.5px; }
   li strong { color: var(--text); }
 
   /* ── DIVIDER ── */
